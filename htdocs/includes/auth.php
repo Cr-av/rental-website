@@ -32,5 +32,11 @@ function logout(): void {
     session_destroy();
 }
 
+function isAdmin() {
+    return isset($_SESSION['rola']) && $_SESSION['rola'] === 'admin';
+}
+
+
+
 
 

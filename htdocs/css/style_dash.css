@@ -8,10 +8,22 @@ body {
     min-height: 100vh;
 }
 
-header, nav, footer {
-    background-color: #754a9e;
+header {
+    background-color: #653b8d;
     padding: 1rem 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+nav {
+    background-color: #6d429b; /* opcjonalnie inny odcień */
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+footer {
+    background-color: #653b8d;
+    padding: 1rem 2rem;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.2); /* cień w górę */
 }
 
 header h1, footer p {
@@ -31,43 +43,81 @@ main {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Nowoczesne przyciski dopasowane kolorystycznie */
 button, .btn {
-    background-color: #28d766;
+    background-color: #2abe2f;  /* fioletowy */
     color: #fff;
     border: none;
-    padding: 0.6rem 6rem;
-    border-radius: 7px;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: 650;
-    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
 }
 
 button:hover, .btn:hover {
-    background-color: #22c25a;
+    background-color: #884ea0;
+    transform: translateY(-2px);
 }
 
+/* Styl linków */
 a {
-    color: #d2d2ff;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #7a52a3; /* fioletowy */
+    color: #ffffff;
+    border-radius: 8px;
     text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 a:hover {
-    text-decoration: underline;
+    background-color: #663a99; /* ciemniejszy fiolet */
+    transform: translateY(-2px);
+    text-decoration: none;
 }
 
 
-
-
-  
-  .card li {
+/* Styl elementów listy */
+.card li {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    margin: 1rem 0; /* większy odstęp między elementami */
+    margin: 1rem 0;
     background: #59347cdc;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
+}
+
+/* Select w kolorystyce fioletowej */
+select {
+    padding: 8px 12px;
+    border: 1px solid #8875a1;
+    border-radius: 8px;
+    background-color: #6a4390;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+select:hover {
+    border-color: #c2a3ec;
+    background-color: #7d4fac;
+}
+
+select:focus {
+    outline: none;
+    border-color: #d7bfff;
+    background-color: #8759b9;
+}
+
   

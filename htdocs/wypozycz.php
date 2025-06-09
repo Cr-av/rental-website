@@ -3,44 +3,51 @@ require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/auth.php';
 requireLogin();
 
-if (!isset($_GET['id'])) {
-    header('Location: dashboard.php');
-    exit();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['media_id'], $_POST['dni'])) {
+    $user_id  = $_SESSION['user_id'];
+    $media_id = (int)$_POST['media_id'];
+    $dni      = (int)$_POST['dni'];
+
+    if ($dni <= 0) {
+        die("Nieprawidłowy okres wypożyczenia.");
+    }
+
+    // Obliczenie dat
+    $data_wyp = date('Y-m-d H:i:s');
+    $data_zwr = date('Y-m-d H:i:s', strtotime("+$dni days"));
+
+    // Ustalmy stałą stawkę np. 2.00 zł za dzień
+    $stawka_dzienna = 2.00;
+    $oplata = $dni * $stawka_dzienna;
+
+    // Przygotowanie zapytania
+    $stmt = $conn->prepare("
+        INSERT INTO wypozyczenia (user_id, media_id, data_wypozyczenia, data_zwrotu, status, oplata)
+        VALUES (?, ?, ?, ?, 'wypozyczone', ?)
+    ");
+
+    if (!$stmt) {
+        die("Błąd zapytania: " . $conn->error);
+    }
+
+    // Parametry: i - int, s - string, d - decimal
+    $stmt->bind_param("iissd", $user_id, $media_id, $data_wyp, $data_zwr, $oplata);
+
+    if ($stmt->execute()) {
+        // Zmniejsz dostępność media (dostepnosc = 0)
+        $conn->query("UPDATE media SET dostepnosc = 0 WHERE id = $media_id");
+
+        header("Location: dashboard.php");
+        exit;
+    } else {
+        die("Nie udało się wypożyczyć pozycji. Błąd: " . $stmt->error);
+    }
+} else {
+    header("Location: dashboard.php");
+    exit;
 }
 
-$user_id  = (int)$_SESSION['user_id'];
-$media_id = (int)$_GET['id'];
-if ($media_id <= 0) {
-    header('Location: dashboard.php');
-    exit();
-}
 
-// Sprawdź dostępność
-$res = $conn->query("SELECT dostepnosc FROM media WHERE id = $media_id");
-$row = $res ? $res->fetch_assoc() : null;
-if (!$row || $row['dostepnosc'] == 0) {
-    die("Pozycja niedostępna.");
-}
-
-// Wypożyczanie w transakcji
-$conn->begin_transaction();
-
-$stmt = $conn->prepare("INSERT INTO wypozyczenia (user_id, media_id) VALUES (?, ?)");
-$stmt->bind_param("ii", $user_id, $media_id);
-if (!$stmt->execute()) {
-    $conn->rollback();
-    die("Błąd podczas wypożyczania: " . $stmt->error);
-}
-
-if (!$conn->query("UPDATE media SET dostepnosc = 0 WHERE id = $media_id")) {
-    $conn->rollback();
-    die("Błąd podczas aktualizacji dostępności.");
-}
-
-$conn->commit();
-
-header("Location: dashboard.php");
-exit();
 
 
 
